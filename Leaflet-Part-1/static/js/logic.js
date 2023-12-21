@@ -1,7 +1,9 @@
+// Function to help increase circl size
 function markerSize(magnitude) {
     return magnitude * 10000;
   }
 
+//Function to easier set colors for circles and legend
 function getColor(d) {
     return d > 90 ? '#ff471a' :
            d > 70  ? '#cc8800' :
@@ -11,7 +13,7 @@ function getColor(d) {
                       '#00ff00';
     };
 
-
+// function that will load the map and populate the earthquake circle markers
 function createMap(earthquakes) {
   // Create the tile layer that will be the background of our map.
   let streetmap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -40,6 +42,7 @@ function createMap(earthquakes) {
     collapsed: false
   }).addTo(map);
 
+  // Add the legend
   let legend = L.control({position: 'bottomright'});
   legend.onAdd = function (map) {
 
@@ -60,19 +63,20 @@ function createMap(earthquakes) {
   legend.addTo(map);
 }
 
+//Function to create the markers based of the latitude and longitude, along with the color based on depth and size based on magnitude
 function createMarkers(response) {
 
-  // Pull the "stations" property from response.data.
+  // Pull the "quake" property from response.features.
   let quakes = response.features;
 
   // Initialize an array to hold the earthquake circles.
   let earthquakes = [];
 
-  // Loop through the stations array.
+  // Loop through the quake array.
   for (let index = 0; index < quakes.length; index++) {
     let quake = quakes[index];
 
-    // For each station, create a marker, and bind a popup with the station's name.
+    // For each quake, create a marker, and bind a popup with the eartquake's location, magnitude and depth.
     let eqMarker = L.circle([quake.geometry.coordinates[1], quake.geometry.coordinates[0]], {
         stroke: false,
         fillOpacity: 0.75,
@@ -86,7 +90,7 @@ function createMarkers(response) {
     earthquakes.push(eqMarker);
   }
 
-  // Create a layer group that's made from the bike markers array, and pass it to the createMap function.
+  // Create a layer group that's made from the earthquakes array, and pass it to the createMap function.
   createMap(L.layerGroup(earthquakes));
 
 }
